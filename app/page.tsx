@@ -7,6 +7,8 @@ const pythonCode1 = Problem.problem1;
 
 const pythonCode2 = Problem.problem2;
 
+const pythonCode3 = Problem.problem3;
+
 export default function Home() {
   // Бодлого 1 - Савааны тэгш өнцөгт
   const [n, setN] = useState("");
@@ -16,6 +18,12 @@ export default function Home() {
   const [numJars, setNumJars] = useState("");
   const [paintLiters, setPaintLiters] = useState("");
   const [maxSquares, setMaxSquares] = useState<number | null>(null);
+
+  // Бодлого 3 - Спирал матриц
+  const [spiralN, setSpiralN] = useState("");
+  const [spiralX, setSpiralX] = useState("");
+  const [spiralY, setSpiralY] = useState("");
+  const [spiralResult, setSpiralResult] = useState<number | null>(null);
 
   // Бодлого 1 тооцоолох
   const handleCalculate1 = () => {
@@ -77,6 +85,45 @@ export default function Home() {
 
     setMaxSquares(maxSquaresLocal);
   };
+  // Бодлого 3 - Спирал матриц тооцоолох (O(1))
+  const handleCalculate3 = () => {
+    const n = parseInt(spiralN);
+    const x = parseInt(spiralX);
+    const y = parseInt(spiralY);
+
+    if (isNaN(n) || isNaN(x) || isNaN(y)) {
+      alert("Зөв тоо оруулна уу");
+      return;
+    }
+
+    if (n < 3 || x < 0 || y < 0 || x >= n || y >= n) {
+      alert("Утгууд хязгаарт багтаахгүй байна");
+      return;
+    }
+
+    const layer = Math.min(x, y, n - 1 - x, n - 1 - y);
+
+    const elementsB = n * n - (n - 2 * layer) * (n - 2 * layer);
+
+    const layerSize = n - 2 * layer;
+    const start = layer;
+    const end = n - layer - 1;
+
+    let position = 0;
+
+    if (x === start && start <= y && y <= end) {
+      position = y - start;
+    } else if (y === end && start < x && x <= end) {
+      position = layerSize - 1 + (x - start);
+    } else if (x === end && start <= y && y < end) {
+      position = 2 * (layerSize - 1) + (end - y);
+    } else {
+      position = 3 * (layerSize - 1) + (end - x);
+    }
+
+    const result = elementsB + position + 1;
+    setSpiralResult(result);
+  };
 
   return (
     <div className="min-h-screen bg-gray-100 p-8">
@@ -96,7 +143,7 @@ export default function Home() {
               Савааны нийт урт n оруулна уу:
             </label>
             <input
-              className="border text-black border-gray-300 placeholder-gray-400 rounded px-4 py-2 w-48"
+              className="border text-black placeholder-gray-400  border-gray-300 rounded px-4 py-2 w-48"
               type="number"
               value={n}
               onChange={(e) => setN(e.target.value)}
@@ -167,6 +214,73 @@ export default function Home() {
             <div className="bg-green-50 border border-green-200 rounded p-4">
               <p className="text-lg font-semibold text-green-800">
                 Хамгийн их будаж болох квадрат: {maxSquares}
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+      {/* Бодлого 3 */}
+      <div className="mt-8 bg-white rounded-lg shadow-lg p-6">
+        <h2 className="text-2xl font-bold mb-4 text-gray-800">
+          Бодлого 3: Спирал матриц O(1)
+        </h2>
+
+        <div className="mb-4 bg-gray-900 text-green-400 p-4 rounded font-mono text-sm overflow-x-auto">
+          <pre>{pythonCode3}</pre>
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <label className="block text-gray-700 mb-2">
+              Матрицын хэмжээ n:
+            </label>
+            <input
+              className="border text-black placeholder-gray-400  border-gray-300 rounded px-4 py-2 w-48"
+              type="number"
+              value={spiralN}
+              onChange={(e) => setSpiralN(e.target.value)}
+              placeholder="Жишээ: 3"
+            />
+          </div>
+
+          <div className="flex gap-4">
+            <div>
+              <label className="block text-gray-700 mb-2">Мөр x:</label>
+              <input
+                className="border text-black placeholder-gray-400  border-gray-300 rounded px-4 py-2 w-32"
+                type="number"
+                value={spiralX}
+                onChange={(e) => setSpiralX(e.target.value)}
+                placeholder="Жишээ: 2"
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-700 mb-2">Багана y:</label>
+              <input
+                className="border text-black placeholder-gray-400  border-gray-300 rounded px-4 py-2 w-32"
+                type="number"
+                value={spiralY}
+                onChange={(e) => setSpiralY(e.target.value)}
+                placeholder="Жишээ: 1"
+              />
+            </div>
+          </div>
+
+          <button
+            onClick={handleCalculate3}
+            className="bg-purple-500 hover:bg-purple-600 text-white px-6 py-2 rounded"
+          >
+            Тооцоолох
+          </button>
+
+          {spiralResult !== null && (
+            <div className="bg-purple-50 border border-purple-200 rounded p-4">
+              <p className="text-lg font-semibold text-purple-800">
+                Спирал матриц [{spiralX}, {spiralY}] = {spiralResult}
+              </p>
+              <p className="text-sm text-gray-600 mt-2">
+                ⚡ O(1) Time Complexity - Тогтмол хугацаанд тооцоолсон
               </p>
             </div>
           )}

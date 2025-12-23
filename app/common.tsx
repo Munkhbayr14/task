@@ -46,4 +46,24 @@ for start in range(n):
     max_squares = max(max_squares, total)
 
 print(max_squares)`,
+
+  problem3 = `n = int(input())
+x, y = map(int, input().split())
+
+layer = min(x, y, n - 1 - x, n - 1 - y)
+elements_before = n * n - (n - 2 * layer) * (n - 2 * layer)
+layer_size = n - 2 * layer
+start = layer
+end = n - layer - 1
+
+if x == start and start <= y <= end:
+    position = y - start
+elif y == end and start < x <= end:
+    position = (layer_size - 1) + (x - start)
+elif x == end and start <= y < end:
+    position = 2 * (layer_size - 1) + (end - y)
+else:
+    position = 3 * (layer_size - 1) + (end - x)
+
+print(elements_before + position + 1)`,
 }
